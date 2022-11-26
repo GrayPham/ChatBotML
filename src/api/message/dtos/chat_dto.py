@@ -5,5 +5,5 @@ class ChatDto(BaseModel):
     botID: str = Field(..., description="User ID")
     userID: str = Field(..., description="User ID")
     message: str = Field(..., description="message")
-    dateMess: datetime =  Field(..., description="Date message")
+    dateMess: datetime =  datetime.now()
 
