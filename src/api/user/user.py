@@ -3,6 +3,7 @@ from typing import List
 from typing import Union
 from api.user.userService.user_service import UserService
 from api.user.dtos.register_dto import RegisterDto
+from api.user.dtos.login_dto import LoginrDto
 from fastapi.responses import JSONResponse
 from datetime import datetime
 user_router = APIRouter()
@@ -34,3 +35,7 @@ async def update_user(id: str):
 async def delete_user(id: str):
     return {"message": "User deleted"}
 
+@user_router.post('/login')
+async def login(login: LoginrDto):
+    data = user_services.login_user(login)
+    return data

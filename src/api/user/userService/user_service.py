@@ -4,6 +4,7 @@ from bson import ObjectId
 import bson
 from core.database.connection import db, user_collection
 from api.user.dtos.register_dto import RegisterDto
+from api.user.dtos.login_dto import LoginrDto
 from datetime import datetime
 
 
@@ -49,9 +50,8 @@ class UserService():
         data = user_collection.find({}).limit(100)
         
         return self.binding_user(data) 
-    
     def create_user(self, registerDto: RegisterDto):
-        print(registerDto)
+
         data =  self.user_data(registerDto)
         print(registerDto.password == registerDto.re_password)
         if registerDto.password != registerDto.re_password:
@@ -67,3 +67,15 @@ class UserService():
         else:
             user_collection.insert_one(dict(data))
             return {"message":"User Created","status": True}
+    def login_user(self, login: LoginrDto):
+
+        # JWT token
+        find_user = user_collection.find_one({
+            '$or': [{'username': login.username},
+            {'password': login.password}]
+        })
+        if find_user:
+
+            return self.user_helper(find_user)  
+        else:
+            return {"message":"User Not Found","status":False}
