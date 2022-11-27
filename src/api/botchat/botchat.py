@@ -21,6 +21,19 @@ async def getAllBot():
             status_code = status.HTTP_400_BAD_REQUEST,
             content = { 'message' : str(e) }
             )
+
+@chat_router.get("/bot") 
+async def getABot(userID: str, botID: str):
+    try:
+        print("A bot")
+        data = chat_services.getchatbotDetail(userID,botID)
+        return data
+        
+    except Exception as e:
+        return JSONResponse(
+            status_code = status.HTTP_400_BAD_REQUEST,
+            content = { 'message' : str(e), "status": False }
+            )
 @chat_router.post("/createchat")
 async def create_chat(chatDto: ChatBotDto):
     try:

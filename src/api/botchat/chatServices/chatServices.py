@@ -46,6 +46,17 @@ class chatServices():
     def get_all_Chat(self):
         mess = chat_collection.find()
         return self.binding_chat(mess)
+    def getchatbotDetail(self,userID,botID):
+        find_payment = payments_collection.count_documents({
+            '$and': [{'userID': userID},
+                        {'botID': botID}]
+        })
+        if find_payment > 0:
+            mess = chat_collection.find({'_id':ObjectId(botID)})
+            return {"ChatBot":mess,"status": True}
+                
+        else:
+            return {"Buyer": False,"status": True}    
     def create_bot(self, chatBOTDto: ChatBotDto):
 
         data =  self.chat_data(chatBOTDto)

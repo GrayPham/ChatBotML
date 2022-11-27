@@ -15,5 +15,8 @@ client = MongoClient(MONGODBURL, int(PORT))
 db = client['ChatbotDB']
 user_collection = db.get_collection('User')
 chat_collection = db.get_collection('Botchat')
-mess_collection = db.get_collection('Message')
+mess_collection = db.get_collection('MessageHung')
 payments_collection = db.get_collection('Payment')
+def createDBChatUser(namedb: str):
+    mess_collectionUser = db.get_collection(namedb)
+    return mess_collectionUser

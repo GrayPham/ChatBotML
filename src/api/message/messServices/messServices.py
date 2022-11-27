@@ -3,8 +3,9 @@
 from api.message.entities.chatCreate import AppUser
 from bson import ObjectId
 import bson
-from core.database.connection import db, chat_collection,mess_collection
+from core.database.connection import db, chat_collection,mess_collection,payments_collection,createDBChatUser
 from api.message.dtos.chat_dto import ChatDto
+from api.message.dtos.chatPayment import chatPayment
 from datetime import datetime
 from fastapi.responses import JSONResponse
 from fastapi.encoders   import jsonable_encoder
@@ -73,3 +74,20 @@ class messService():
             
         else:
             return {"message":"Bot ID is not exist!","status": False}
+    def sentMessageBuy(self, chatPayment: chatPayment):
+        find_payment = payments_collection.find({
+            '$and': [{'_id': ObjectId(chatPayment.securitykey)},
+                    {'userID': chatPayment.userID},
+                    {'botID': chatPayment.botID},
+                    {'status': bool("True")}]
+        }) 
+
+        if find_payment:
+            mess_collection = createDBChatUser('Message'+chatPayment.username)
+            data =  self.chat_data(chatPayment)
+            
+            mess_collection.insert_one(dict(data))
+            return {"message":"Chat Success","status": True}
+            
+        else:
+            return {"message":"404!","status": False}
