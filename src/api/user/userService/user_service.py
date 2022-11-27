@@ -14,11 +14,9 @@ class UserService():
         return {
             "id": str(user["_id"]),
             "username": user["username"],
-            "password": user["password"],
             "phone": user["phone"],
             "email": user["email"],
             "address": user["address"],
-            "status": user["status"],
         }
     def binding_user(self, datas):
         users = []
