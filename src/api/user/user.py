@@ -6,6 +6,8 @@ from api.user.dtos.register_dto import RegisterDto
 from api.user.dtos.login_dto import LoginrDto
 from fastapi.responses import JSONResponse
 from datetime import datetime
+
+from api.auth.auth_bearer import JWTBearer
 user_router = APIRouter()
 user_services = UserService()
 
@@ -23,7 +25,7 @@ async def create_user(registerDto: RegisterDto):
             )
 
 
-@user_router.get('/get-all-user')
+@user_router.get('/get-all-user', dependencies=[Depends(JWTBearer())], tags=["Admin get all users"])
 async def get_all_user():
     return user_services.get_all_user()
 
@@ -36,6 +38,7 @@ async def delete_user(id: str):
     return {"message": "User deleted"}
 
 @user_router.post('/login')
-async def login(login: LoginrDto):
+async def login(login: LoginrDto ):
     data = user_services.login_user(login)
+    
     return data

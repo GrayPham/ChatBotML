@@ -11,12 +11,12 @@ from paypalcheckoutsdk.orders import OrdersCreateRequest
 from fastapi.responses import JSONResponse
 from fastapi import Request
 from datetime import datetime
-
+from api.auth.auth_bearer import JWTBearer
 
 payment_router = APIRouter()
 payment_services = PaymentService()
 
-@payment_router.post("/payment")
+@payment_router.post("/payment", dependencies=[Depends(JWTBearer())])
 async def create_payment(paymentDto: PaymentDto):
     try:
         print("Creating payment")

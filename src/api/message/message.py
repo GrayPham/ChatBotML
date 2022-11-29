@@ -6,11 +6,12 @@ from api.message.messServices.messServices import messService
 from api.message.dtos.chat_dto import ChatDto
 from api.message.dtos.chatPayment import chatPayment
 from fastapi.responses import JSONResponse
+from api.auth.auth_bearer import JWTBearer
 from datetime import datetime
 mess_router = APIRouter()
 mess_services = messService()
 
-@mess_router.post("/chatmessages")
+@mess_router.post("/chatmessages", dependencies=[Depends(JWTBearer())])
 async def create_chat(chatDto: ChatDto):
     try:
         print("Messeger")

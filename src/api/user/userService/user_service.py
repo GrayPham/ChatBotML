@@ -5,6 +5,7 @@ import bson
 from core.database.connection import db, user_collection
 from api.user.dtos.register_dto import RegisterDto
 from api.user.dtos.login_dto import LoginrDto
+from api.auth.auth_handler import signJWT
 from datetime import datetime
 
 
@@ -69,11 +70,11 @@ class UserService():
 
         # JWT token
         find_user = user_collection.find_one({
-            '$or': [{'username': login.username},
+            '$and': [{'username': login.username},
             {'password': login.password}]
         })
         if find_user:
-
-            return self.user_helper(find_user)  
+            
+            return  {"data": self.user_helper(find_user),"token": signJWT(login.username)}
         else:
-            return {"message":"User Not Found","status":False}
+            return {"error":"Invalid login details!","status":False}

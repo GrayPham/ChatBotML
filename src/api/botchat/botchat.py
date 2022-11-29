@@ -5,6 +5,7 @@ from typing import Union
 from api.botchat.chatServices.ChatServices import chatServices
 from api.botchat.dtos.chatbot_dto import ChatBotDto
 from fastapi.responses import JSONResponse
+from api.auth.auth_bearer import JWTBearer
 from datetime import datetime
 chat_router = APIRouter()
 chat_services = chatServices()
@@ -49,7 +50,7 @@ async def create_chat(chatDto: ChatBotDto):
 @chat_router.put("/deletechat")
 async def detete_bot(chatID: str):
     return await "Not active"
-@chat_router.get("/getlinkbuy")
+@chat_router.get("/getlinkbuy", dependencies=[Depends(JWTBearer())])
 async def getlink_bot(securitykey: str, userID: str):
     
     try:
