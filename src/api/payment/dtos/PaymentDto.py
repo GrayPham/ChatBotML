@@ -6,7 +6,5 @@ class PaymentDto(BaseModel):
     userID: str = Field(..., description="Username")
     botID: str = Field(..., description="Password")
     dateBought: datetime = Field(..., description="dateBought")
-    dateSale: datetime =  Field(..., description="dateSale")
     price: float =  Field(..., description="Price")
     paymentMethod: str = Field(..., description='Payment Method')
-    status: bool = Field(..., description='Status')

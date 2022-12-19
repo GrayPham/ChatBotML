@@ -5,7 +5,7 @@ import bson
 from paypalcheckoutsdk.core import PayPalHttpClient, SandboxEnvironment
 from os import getenv
 
-from core.database.connection import db, payments_collection
+from core.database.connection import db, user_collection,payments_collection
 from api.payment.dtos.PaymentDto import PaymentDto
 from paypalcheckoutsdk.orders import OrdersCreateRequest
 from fastapi import Request
@@ -24,10 +24,9 @@ class PaymentService():
             "userID": payment["userID"],
             "botID": payment["botID"],
             "dateBought": payment["dateBought"],
-            "dateSale": payment["dateSale"],
             "price": payment["price"],
             "paymentMethod": payment["paymentMethod"],
-            "status": payment["status"],
+            "status": True,
         }
     def binding_payment(self, datas):
         payments = []
@@ -46,27 +45,28 @@ class PaymentService():
     def payment_data(self, paymentDto: PaymentDto): 
         payment =  {
             "paymentID": paymentDto.paymentID,
-            "userID": paymentDto.userID,
             "botID": paymentDto.botID,
             "dateBought": paymentDto.dateBought,
-            "dateSale": paymentDto.dateSale,
             "price": paymentDto.price,
             "paymentMethod" : paymentDto.paymentMethod,
-            "status": paymentDto.status,
+            "status": True,
 
         }
         return payment
     def payment_Abot(self, paymentDto: PaymentDto): 
         print(paymentDto)
         data =  self.payment_data(paymentDto)
+        # 
+        # find_payment = payments_collection.find({
+        #     '$and': [{'botID': paymentDto.botID},
+        #     {'userID': paymentDto.userID}]
+        # }) 
 
-        find_payment = payments_collection.find({
-            '$and': [{'botID': paymentDto.botID},
-            {'userID': paymentDto.userID}]
-        }) 
-
-        if find_payment:
-            payments_collection.insert_one(dict(data))
+        if paymentDto.userID:
+            user_collection.update_many(
+                {"_id": ObjectId(paymentDto.userID) },
+                {"$push":{"payment":dict(data)}}
+                )
             return {"message":"Payment Successfully","status": True}
             
         else:

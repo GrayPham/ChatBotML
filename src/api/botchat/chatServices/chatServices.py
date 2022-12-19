@@ -34,15 +34,23 @@ class chatServices():
         return chats
             
     def chat_data(self, chatDto: ChatBotDto): 
+
         chat =  {
+            
             "title": chatDto.title,
-            "link": chatDto.link,
+            #"link": chatDto.link,
             "status": chatDto.status,
             "prices": chatDto.prices,
             "linkAvatar": chatDto.linkAvatar,
         }
         return chat
     
+    # Get all ChatBot objects when user is logged and verify chatbot status bought
+    def get_all_ChatLogin(self, userid):
+        mess = chat_collection.find()
+
+        return self.binding_chat(mess)
+    # Get all ChatBot objects when user is not logged 
     def get_all_Chat(self):
         mess = chat_collection.find()
         return self.binding_chat(mess)
@@ -56,7 +64,10 @@ class chatServices():
             return {"ChatBot":mess,"status": True}
                 
         else:
-            return {"Buyer": False,"status": True}    
+            return {"Buyer": False,"status": True}   
+        
+
+        
     def create_bot(self, chatBOTDto: ChatBotDto):
 
         data =  self.chat_data(chatBOTDto)

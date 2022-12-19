@@ -39,9 +39,12 @@ class UserService():
             "username": registerDto.username,
             "password": registerDto.password,
             "phone": registerDto.phone,
+            "role": "user",
             "email": registerDto.email,
             "address": registerDto.address,
             "status": registerDto.status,
+            "message": [],
+            "payment": []
         }
         return user
     
@@ -67,7 +70,7 @@ class UserService():
             user_collection.insert_one(dict(data))
             return {"message":"User Created","status": True}
     def login_user(self, login: LoginrDto):
-
+        print(login)
         # JWT token
         find_user = user_collection.find_one({
             '$and': [{'username': login.username},

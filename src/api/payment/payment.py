@@ -15,7 +15,7 @@ from api.auth.auth_bearer import JWTBearer
 
 payment_router = APIRouter()
 payment_services = PaymentService()
-
+# API thanh toan san pham
 @payment_router.post("/payment", dependencies=[Depends(JWTBearer())])
 async def create_payment(paymentDto: PaymentDto):
     try:
@@ -104,3 +104,5 @@ async def test_Payment(request: Request):
             status_code = status.HTTP_400_BAD_REQUEST,
             content = { 'message' : str(e) }
             )
+
+# API kiem tra san pham da duoc thanh toan hay chua
