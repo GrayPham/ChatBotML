@@ -1,7 +1,7 @@
 from datetime import datetime
 from pydantic import BaseModel, Field
 
-class UpdateDto(BaseModel):
+class UserDto(BaseModel):
     id: str = Field(..., description='Id user')
     username: str = Field(..., description='Username')
     password: str = Field(..., description="Password")

@@ -1,10 +1,15 @@
 
+from fastapi import HTTPException
+from api.botchat.dtos.chatbot_dto import ChatBotDto
+from api.payment.dtos.PaymentDto import PaymentDto
+from api.user.dtos.user_dto import UserDto
 from api.user.entities.registerUser import AppUser
 from bson import ObjectId
 import bson
-from core.database.connection import db, user_collection
+from core.database.connection import db, user_collection,chat_collection
 from api.user.dtos.register_dto import RegisterDto
 from api.user.dtos.login_dto import LoginrDto
+from api.user.dtos.update_dto import UpdateDto
 from api.auth.auth_handler import signJWT
 from datetime import datetime
 
@@ -33,7 +38,7 @@ class UserService():
             }
             users.append(user)
         return users
-            
+    
     def user_data(self, registerDto: RegisterDto): 
         user =  {
             "username": registerDto.username,
@@ -47,6 +52,44 @@ class UserService():
             "payment": []
         }
         return user
+    def user_dataDist(self, data): 
+        user =  {
+            "username": data["username"],
+            "phone": data["phone"],
+            "role": "user",
+            "email": data["email"],
+            "address": data["address"],
+            "status": data["status"],
+            "message" :data["message"],
+            "payment": data["payment"],
+        }
+        return user
+    def user_datafull(self,data ):
+        user = {
+            "id": str(data["_id"]),
+            "username": data["username"],
+            "phone": data["phone"],
+            "email": data["email"],
+            "address": data["address"],
+            "message" :data["message"],
+            "payment": data["payment"],
+            }
+        return user
+    def chat_data(self, chatDto): 
+        print("Chatbot convert")
+        chat =  {
+            
+            "title": chatDto["title"],
+            "link": chatDto["link"],
+            "status": chatDto["status"],
+
+        }
+        return chat
+    def payment_data(self, data): 
+        payment =  {
+            "payment": data["payment"]
+        }
+        return payment
     
     def get_all_user(self):
         data = user_collection.find({}).limit(100)
@@ -81,3 +124,55 @@ class UserService():
             return  {"data": self.user_helper(find_user),"token": signJWT(login.username)}
         else:
             return {"error":"Invalid login details!","status":False}
+    def countChatbotUsers(self, userid: str):
+        print("User full", len(userid))
+        find_user = user_collection.find_one({
+            "_id": ObjectId(userid)
+        })
+        
+        if find_user:
+            data = self.user_datafull(find_user)
+            return {"data": data}
+        else:
+            return {"data": "User not found"}
+    def updateuser(self, user: UpdateDto):
+        update_result =  user_collection.update_one({"_id":ObjectId(user.id)},{"$set":{
+            "username":user.username,
+            "password":user.password,
+            "phone":user.phone,
+            "email":user.email,
+            "address": user.address
+            }})
+        if update_result.modified_count == 1:
+            updated_user =  user_collection.find_one({"_id":ObjectId(user.id)})
+            return self.user_dataDist(updated_user)
+
+
+        existing_student = user_collection.find_one({"_id":ObjectId(user.id)})
+        if ( existing_student):
+            return {"data": "User information no new content"}
+            
+        else:
+            return HTTPException(status_code=404, detail=f"User {user.id} not found")
+    def getlinkbot(self,userID: str, securitykey: str):
+        # kiem tra user
+
+            find_user = user_collection.find_one({'_id': ObjectId(userID)})
+
+            if find_user:
+
+                payment = user_collection.find_one({'_id': ObjectId(userID)},{"payment":{"$elemMatch":{"paymentID": securitykey,"status": True}}})
+
+                if payment:
+                    paymentdata = self.payment_data(payment)
+                    print("Payment data", paymentdata)
+                    mess = chat_collection.find_one({
+                        '_id': ObjectId(paymentdata["payment"][0]["botID"])
+                    })
+                    data = self.chat_data(mess)
+                    print("data",data["link"])
+                    return {"link":userID + "/" +securitykey+"/"+ data["link"], "status": True}
+                else:
+                    return {"message": "KeyError","status": False}
+            else:
+                return {"message": "KeyError","status": False}

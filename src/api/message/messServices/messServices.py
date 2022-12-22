@@ -3,7 +3,7 @@
 from api.message.entities.chatCreate import AppUser
 from bson import ObjectId
 import bson
-from core.database.connection import db, chat_collection,mess_collection,payments_collection,createDBChatUser
+from core.database.connection import db, chat_collection,mess_collection,payments_collection,createDBChatUser,user_collection
 from api.message.dtos.chat_dto import ChatDto
 from api.message.dtos.chatPayment import chatPayment
 from datetime import datetime
@@ -58,6 +58,11 @@ class messService():
 
         if find_chat:
             mess_collection.insert_one(dict(data))
+            user_collection.update_many({"_id": ObjectId(chatDto.userID) },{"$pull":{"message":""}})
+            user_collection.update_many(
+                {"_id": ObjectId(chatDto.userID) },
+                {"$push":{"message":dict(data)}}
+                )
             return {"message":"Chat Success","status": True}
             
         else:
@@ -81,7 +86,6 @@ class messService():
                     {'botID': chatPayment.botID},
                     {'status': bool("True")}]
         }) 
-
         if find_payment:
             mess_collection = createDBChatUser('Message'+chatPayment.username)
             data =  self.chat_data(chatPayment)
