@@ -1,6 +1,7 @@
 from datetime import datetime
 from pydantic import BaseModel, Field
 
+
 class RegisterDto(BaseModel):
     username: str = Field(..., description='Username')
     password: str = Field(..., description="Password")
@@ -8,4 +9,5 @@ class RegisterDto(BaseModel):
     phone: str =  Field(..., description="Phone")
     email: str =  Field(..., description="Email")
     address: str = Field(..., description='Address')
-    status: bool = Field(..., description='Status')
+
+

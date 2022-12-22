@@ -47,7 +47,11 @@ class UserService():
             "role": "user",
             "email": registerDto.email,
             "address": registerDto.address,
-            "status": registerDto.status,
+            "status": True,
+            "messageCurrent": {
+                "BotId": "",
+                "History": [[]]
+            },
             "message": [],
             "payment": []
         }
@@ -176,3 +180,21 @@ class UserService():
                     return {"message": "KeyError","status": False}
             else:
                 return {"message": "KeyError","status": False}
+    def delete(self,userID: str):
+        updated = user_collection.update_one(
+            {"_id": ObjectId(userID) },         
+            {"$set":{"status":False}}
+        )
+        if(updated.modified_count):
+            return {"message":"Delete Success","status": True}
+        else:
+            return {"message":"User ID not exist","status": True}
+    def activeBot(self,userID: str):
+        updated = user_collection.update_one(
+            {"_id": ObjectId(userID) },         
+            {"$set":{"status":True}}
+        )
+        if(updated.modified_count):
+            return {"message":"Active Success","status": True}
+        else:
+            return {"message":"User ID not exist","status": True}

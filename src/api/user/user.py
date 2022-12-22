@@ -42,10 +42,27 @@ async def update_user(user: UpdateDto):
             status_code = status.HTTP_400_BAD_REQUEST,
             content = { 'message' : str(e) }
             )
-
+@user_router.put("/active/{id}")
+async def active_user(userid: str):
+    try:
+        data = user_services.activeBot(userid)
+        return data
+        
+    except Exception as e:
+        return JSONResponse(
+            status_code = status.HTTP_400_BAD_REQUEST,
+            content = { 'message' : str(e) }
+            )
 @user_router.delete("/delete/{id}")
 async def delete_user(id: str):
-    return {"message": "User deleted"}
+    try:
+        data = user_services.delete(id)
+        return data
+    except Exception as e:
+        return JSONResponse(
+            status_code = status.HTTP_400_BAD_REQUEST,
+            content = { 'message' : str(e) }
+            )
 
 @user_router.post('/login')
 async def login(login: LoginrDto ):

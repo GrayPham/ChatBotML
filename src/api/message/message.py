@@ -11,7 +11,7 @@ from datetime import datetime
 mess_router = APIRouter()
 mess_services = messService()
 
-@mess_router.post("/chatmessages")
+@mess_router.post("/chatmessages", dependencies=[Depends(JWTBearer())], tags=["ChatMessage Token"])
 async def create_chat(chatDto: ChatDto):
     try:
         print("Messeger")

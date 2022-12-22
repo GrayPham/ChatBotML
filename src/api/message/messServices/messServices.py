@@ -52,18 +52,53 @@ class messService():
         data =  self.chat_data(chatDto)
         
 
-        find_chat = chat_collection.find({
+        find_chat = chat_collection.count_documents({
             '_id': ObjectId(chatDto.botID)
         }) 
 
-        if find_chat:
-            mess_collection.insert_one(dict(data))
+        if find_chat:   
+            # Check history_ids for chatbot and user
+            user = user_collection.find_one({'_id': ObjectId(chatDto.userID)})
+            print(user["messageCurrent"])
+            if  chatDto.firstCheck == True:
+                if(user["messageCurrent"]["BotId"] =="" ):
+                    print("True")
+                # Không phải tin nhắn đầu
+                else:
+                    # Goi Models(False ->True)
+                    print("Clear history")
+                    removedata= {
+                        "BotId" : chatDto.botID,
+                        "History": [[31373, 50256]] # Do Model tra ve Bao gom ket qua tin nhan va History
+
+                    }
+                    updated = user_collection.update_many(
+                        {"_id": ObjectId(chatDto.userID) },
+                        {"$set":{"messageCurrent":dict(removedata)}}
+                    
+                    
+                )
+            else: 
+                print("False")
+                # Goi Models(False ->First)
+                removedata= {
+                    "BotId" : chatDto.botID,
+                    "History": [[31373, 50256,15496, 13,50256]] # Do Model tra ve Bao gom ket qua tin nhan va History
+
+                }
+                updated = user_collection.update_many(
+                    {"_id": ObjectId(chatDto.userID) },
+                    {"$set":{"messageCurrent":dict(removedata)}}
+                )
             user_collection.update_many({"_id": ObjectId(chatDto.userID) },{"$pull":{"message":""}})
-            user_collection.update_many(
+            updated = user_collection.update_many(
                 {"_id": ObjectId(chatDto.userID) },
                 {"$push":{"message":dict(data)}}
                 )
-            return {"message":"Chat Success","status": True}
+            if(updated.modified_count):
+                return {"message":"Chat Success","status": True}
+            else:
+                return {"message":"User ID not exist","status": True}
             
         else:
             return {"message":"Bot ID is not exist!","status": False}
