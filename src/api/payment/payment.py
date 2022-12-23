@@ -106,3 +106,14 @@ async def test_Payment(request: Request):
             )
 
 # API kiem tra san pham da duoc thanh toan hay chua
+@payment_router.get("/checkpayment")
+async def Checkpayment(userID: str, botID: str):
+    try:
+        data = payment_services.checkpayment(userID,botID)
+        return data
+        
+    except Exception as e:
+        return JSONResponse(
+            status_code = status.HTTP_400_BAD_REQUEST,
+            content = { 'message' : str(e) }
+            )

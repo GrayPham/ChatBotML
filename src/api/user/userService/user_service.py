@@ -23,6 +23,7 @@ class UserService():
             "phone": user["phone"],
             "email": user["email"],
             "address": user["address"],
+            "role": user["role"]
         }
     def binding_user(self, datas):
         users = []

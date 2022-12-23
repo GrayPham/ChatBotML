@@ -3,6 +3,7 @@
 from api.message.entities.chatCreate import AppUser
 from bson import ObjectId
 import bson
+from api.model.model import modelService
 from core.database.connection import db, chat_collection,mess_collection,payments_collection,createDBChatUser,user_collection
 from api.message.dtos.chat_dto import ChatDto
 from api.message.dtos.chatPayment import chatPayment
@@ -60,30 +61,53 @@ class messService():
             # Check history_ids for chatbot and user
             user = user_collection.find_one({'_id': ObjectId(chatDto.userID)})
             print(user["messageCurrent"])
+            mess_services = modelService("chatbotName")
+            response =""
+            generated_responses =""
+            past_user_inputs = ""
             if  chatDto.firstCheck == True:
-                if(user["messageCurrent"]["BotId"] =="" ):
-                    print("True")
-                # Không phải tin nhắn đầu
-                else:
-                    # Goi Models(False ->True)
-                    print("Clear history")
-                    removedata= {
-                        "BotId" : chatDto.botID,
-                        "History": [[31373, 50256]] # Do Model tra ve Bao gom ket qua tin nhan va History
-
+                print("True")
+                response, generated_responses, past_user_inputs = mess_services.printChatModel(
+                    {"inputs":
+                        {"generated_responses":[],
+                        "past_user_inputs":[],
+                        "text":chatDto.message}
                     }
-                    updated = user_collection.update_many(
+                )
+                print("History", response)
+                print("Bot Message", generated_responses)
+                removedata= {
+                        "BotId" : chatDto.botID,
+                        "HistoryBot": generated_responses, # Do Model tra ve Bao gom ket qua tin nhan va History
+                        "HistoryUser": past_user_inputs,
+
+                }
+                updated = user_collection.update_many(
                         {"_id": ObjectId(chatDto.userID) },
                         {"$set":{"messageCurrent":dict(removedata)}}
+                    )
+
                     
-                    
-                )
             else: 
                 print("False")
                 # Goi Models(False ->First)
+                history_user = user["messageCurrent"]["HistoryUser"]
+                history_bot = user["messageCurrent"]["HistoryBot"]
+                response, generated_responses, past_user_inputs = mess_services.printChatModel(
+                    {"inputs":
+                        {"generated_responses":history_bot,
+                        "past_user_inputs":history_user,
+                        "text":chatDto.message}
+                    }
+                )
+                print("History", past_user_inputs)
+                print("Bot Message", generated_responses)
+
+
                 removedata= {
                     "BotId" : chatDto.botID,
-                    "History": [[31373, 50256,15496, 13,50256]] # Do Model tra ve Bao gom ket qua tin nhan va History
+                    "HistoryBot": generated_responses, # Do Model tra ve Bao gom ket qua tin nhan va History
+                    "HistoryUser": past_user_inputs,
 
                 }
                 updated = user_collection.update_many(
@@ -96,7 +120,7 @@ class messService():
                 {"$push":{"message":dict(data)}}
                 )
             if(updated.modified_count):
-                return {"message":"Chat Success","status": True}
+                return {"message": response,"status": True}
             else:
                 return {"message":"User ID not exist","status": True}
             

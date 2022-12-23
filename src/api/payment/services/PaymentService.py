@@ -92,5 +92,15 @@ class PaymentService():
             return {"message":"You already delete this chatbot!","status": True}
         else:
             return {"message":"Your invoice has been deleted or does not exist!","status": False}
+    def checkpayment(self, userId, botID):
+        find_payment = user_collection.find_one({
+            '$and': [{'_id': ObjectId(userId)},
+                    {'payment.botID': botID},
+                    ]
+        }) 
+        if find_payment:
+            return {"message": True, "status": True}
+        else:
+            return {"message":False,"status": True}
     
         
