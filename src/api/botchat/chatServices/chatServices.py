@@ -38,7 +38,7 @@ class chatServices():
         chat =  {
             
             "title": chatDto.title,
-            #"link": chatDto.link,
+            "link": chatDto.link,
             "status": chatDto.status,
             "prices": chatDto.prices,
             "linkAvatar": chatDto.linkAvatar,

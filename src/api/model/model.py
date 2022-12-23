@@ -1,4 +1,3 @@
-from transformers import AutoModelWithLMHead, AutoTokenizer
 import numpy as np
 import json
 import requests
@@ -7,7 +6,7 @@ class modelService():
     API_URL = ""
     headers = ""
     def __init__(self, namemodel:str):
-        self.API_URL = "https://api-inference.huggingface.co/models/satvikag/chatbot"
+        self.API_URL = namemodel
         self.headers = {"Authorization": "Bearer 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"}
     def printChatModel(self, payload ):
         data = json.dumps(payload)

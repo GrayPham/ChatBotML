@@ -56,21 +56,21 @@ class messService():
 
         }
         return chat
-    
-    def create_mess(self, chatDto: ChatDto):
 
+    def create_mess(self, chatDto: ChatDto):
+        print(chatDto)
         data =  self.chat_data(chatDto)
         
 
-        find_chat = chat_collection.count_documents({
+        find_chat = chat_collection.find_one({
             '_id': ObjectId(chatDto.botID)
         }) 
-
+        print("find_chatlink",find_chat["link"])
         if find_chat:   
             # Check history_ids for chatbot and user
             user = user_collection.find_one({'_id': ObjectId(chatDto.userID)})
-            print(user["messageCurrent"])
-            mess_services = modelService("chatbotName")
+            
+            mess_services = modelService(find_chat["link"])
             response =""
             generated_responses =""
             past_user_inputs = ""
@@ -128,6 +128,7 @@ class messService():
                 {"_id": ObjectId(chatDto.userID) },
                 {"$push":{"message":dict(data)}}
                 )
+            
             if(updated.modified_count):
                 return {"message": response,"status": True}
             else:
@@ -135,6 +136,7 @@ class messService():
             
         else:
             return {"message":"Bot ID is not exist!","status": False}
+        
     def get_all_messAChat(self, chatID: str):
 
         find_chat = chat_collection.find({
@@ -155,12 +157,14 @@ class messService():
         find_chat = user_collection.count_documents({
             'payment.paymentID': chatPayment.securitykey
         }) 
-
+        chat = chat_collection.count_documents({
+            '_id': ObjectId(chatPayment.botID)
+        }) 
         if find_chat:   
             # Check history_ids for chatbot and user
             user = user_collection.find_one({'_id': ObjectId(chatPayment.userID)})
             print(user["messageCurrent"])
-            mess_services = modelService("chatbotName")
+            mess_services = modelService(chat["link"])
             response =""
             generated_responses =""
             past_user_inputs = ""
