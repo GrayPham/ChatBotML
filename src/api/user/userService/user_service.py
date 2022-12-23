@@ -176,7 +176,7 @@ class UserService():
                     })
                     data = self.chat_data(mess)
                     print("data",data["link"])
-                    return {"link":userID + "/" +securitykey+"/"+ data["link"], "status": True}
+                    return {"userID":str(userID) , "botID":str(paymentdata["payment"][0]["botID"]),"securitykey":str(securitykey), "status": True}
                 else:
                     return {"message": "KeyError","status": False}
             else:

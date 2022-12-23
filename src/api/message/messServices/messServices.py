@@ -46,7 +46,16 @@ class messService():
         }
         return chat
     
+    def chat_datapayment(self, chatDto: ChatDto): 
+        chat =  {
+            "botID": chatDto.botID,
+            "userID": chatDto.userID,
+            "message": chatDto.message,
+            "firstCheck": chatDto.firstCheck,
+            "securitykey": chatDto.securitykey
 
+        }
+        return chat
     
     def create_mess(self, chatDto: ChatDto):
 
@@ -139,18 +148,80 @@ class messService():
         else:
             return {"message":"Bot ID is not exist!","status": False}
     def sentMessageBuy(self, chatPayment: chatPayment):
-        find_payment = payments_collection.find({
-            '$and': [{'_id': ObjectId(chatPayment.securitykey)},
-                    {'userID': chatPayment.userID},
-                    {'botID': chatPayment.botID},
-                    {'status': bool("True")}]
+
+        data =  self.chat_datapayment(chatPayment)
+        
+
+        find_chat = user_collection.count_documents({
+            'payment.paymentID': chatPayment.securitykey
         }) 
-        if find_payment:
-            mess_collection = createDBChatUser('Message'+chatPayment.username)
-            data =  self.chat_data(chatPayment)
-            
-            mess_collection.insert_one(dict(data))
-            return {"message":"Chat Success","status": True}
+
+        if find_chat:   
+            # Check history_ids for chatbot and user
+            user = user_collection.find_one({'_id': ObjectId(chatPayment.userID)})
+            print(user["messageCurrent"])
+            mess_services = modelService("chatbotName")
+            response =""
+            generated_responses =""
+            past_user_inputs = ""
+            if  chatPayment.firstCheck == True:
+                print("True")
+                response, generated_responses, past_user_inputs = mess_services.printChatModel(
+                    {"inputs":
+                        {"generated_responses":[],
+                        "past_user_inputs":[],
+                        "text":chatPayment.message}
+                    }
+                )
+                print("History", response)
+                print("Bot Message", generated_responses)
+                removedata= {
+                        "BotId" : chatPayment.botID,
+                        "HistoryBot": generated_responses, # Do Model tra ve Bao gom ket qua tin nhan va History
+                        "HistoryUser": past_user_inputs,
+
+                }
+                updated = user_collection.update_many(
+                        {"_id": ObjectId(chatPayment.userID) },
+                        {"$set":{"messageCurrent":dict(removedata)}}
+                    )
+
+                    
+            else: 
+                print("False")
+                # Goi Models(False ->First)
+                history_user = user["messageCurrent"]["HistoryUser"]
+                history_bot = user["messageCurrent"]["HistoryBot"]
+                response, generated_responses, past_user_inputs = mess_services.printChatModel(
+                    {"inputs":
+                        {"generated_responses":history_bot,
+                        "past_user_inputs":history_user,
+                        "text":chatPayment.message}
+                    }
+                )
+                print("History", past_user_inputs)
+                print("Bot Message", generated_responses)
+
+
+                removedata= {
+                    "BotId" : chatPayment.botID,
+                    "HistoryBot": generated_responses, # Do Model tra ve Bao gom ket qua tin nhan va History
+                    "HistoryUser": past_user_inputs,
+
+                }
+                updated = user_collection.update_many(
+                    {"_id": ObjectId(chatPayment.userID) },
+                    {"$set":{"messageCurrent":dict(removedata)}}
+                )
+            user_collection.update_many({"_id": ObjectId(chatPayment.userID) },{"$pull":{"message":""}})
+            updated = user_collection.update_many(
+                {"_id": ObjectId(chatPayment.userID) },
+                {"$push":{"message":dict(data)}}
+                )
+            if(updated.modified_count):
+                return {"message": response,"status": True,"First": False}
+            else:
+                return {"message":"User ID not exist","status": True,"First": True}
             
         else:
-            return {"message":"404!","status": False}
+            return {"message":"Bot ID is not exist!","status": False,"First": True}
