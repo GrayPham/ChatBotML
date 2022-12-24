@@ -1,12 +1,11 @@
 
-from api.payment.entities.PaymentEntitiy import AppPayment
+from src.api.payment.entities.PaymentEntitiy import AppPayment
 from bson import ObjectId
-import bson
 from paypalcheckoutsdk.core import PayPalHttpClient, SandboxEnvironment
 from os import getenv
 
-from core.database.connection import db, user_collection,payments_collection
-from api.payment.dtos.PaymentDto import PaymentDto
+from src.core.database.connection import db, user_collection,payments_collection
+from src.api.payment.dtos.PaymentDto import PaymentDto
 from paypalcheckoutsdk.orders import OrdersCreateRequest
 from fastapi import Request
 from fastapi.responses import JSONResponse

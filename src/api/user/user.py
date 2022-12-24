@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Depends, Query, UploadFile, status
 from typing import List
 from typing import Union
-from api.user.dtos.update_dto import UpdateDto
-from api.user.userService.user_service import UserService
-from api.user.dtos.register_dto import RegisterDto
-from api.user.dtos.login_dto import LoginrDto
+from src.api.user.dtos.update_dto import UpdateDto
+from src.api.user.userService.user_service import UserService
+from src.api.user.dtos.register_dto import RegisterDto
+from src.api.user.dtos.login_dto import LoginrDto
 from fastapi.responses import JSONResponse
 from datetime import datetime
 
-from api.auth.auth_bearer import JWTBearer
+from src.api.auth.auth_bearer import JWTBearer
 user_router = APIRouter()
 user_services = UserService()
 

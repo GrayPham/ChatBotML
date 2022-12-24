@@ -1,15 +1,15 @@
 
 from fastapi import HTTPException
-from api.botchat.dtos.chatbot_dto import ChatBotDto
-from api.payment.dtos.PaymentDto import PaymentDto
-from api.user.dtos.user_dto import UserDto
-from api.user.entities.registerUser import AppUser
+from src.api.botchat.dtos.chatbot_dto import ChatBotDto
+from src.api.payment.dtos.PaymentDto import PaymentDto
+from src.api.user.dtos.user_dto import UserDto
+from src.api.user.entities.registerUser import AppUser
 from bson import ObjectId
-from core.database.connection import db, user_collection,chat_collection
-from api.user.dtos.register_dto import RegisterDto
-from api.user.dtos.login_dto import LoginrDto
-from api.user.dtos.update_dto import UpdateDto
-from api.auth.auth_handler import signJWT
+from src.core.database.connection import db, user_collection,chat_collection
+from src.api.user.dtos.register_dto import RegisterDto
+from src.api.user.dtos.login_dto import LoginrDto
+from src.api.user.dtos.update_dto import UpdateDto
+from src.api.auth.auth_handler import signJWT
 from datetime import datetime
 
 

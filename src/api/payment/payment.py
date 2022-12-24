@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, Query, UploadFile, status
 from typing import List
 from typing import Union
-from api.payment.services.PaymentService import PaymentService
-from api.payment.dtos.PaymentDto import PaymentDto
+from src.api.payment.services.PaymentService import PaymentService
+from src.api.payment.dtos.PaymentDto import PaymentDto
 
 from paypalcheckoutsdk.core import PayPalHttpClient, SandboxEnvironment
 from os import getenv
@@ -11,7 +11,7 @@ from paypalcheckoutsdk.orders import OrdersCreateRequest
 from fastapi.responses import JSONResponse
 from fastapi import Request
 from datetime import datetime
-from api.auth.auth_bearer import JWTBearer
+from src.api.auth.auth_bearer import JWTBearer
 
 payment_router = APIRouter()
 payment_services = PaymentService()

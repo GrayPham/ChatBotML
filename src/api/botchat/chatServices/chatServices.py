@@ -1,7 +1,7 @@
-from api.botchat.entities.chat import AppChat
+from src.api.botchat.entities.chat import AppChat
 from bson import ObjectId
-from core.database.connection import db, chat_collection,payments_collection,user_collection
-from api.botchat.dtos.chatbot_dto import ChatBotDto
+from src.core.database.connection import db, chat_collection,payments_collection,user_collection
+from src.api.botchat.dtos.chatbot_dto import ChatBotDto
 from datetime import datetime
 from fastapi.responses import JSONResponse
 from fastapi.encoders   import jsonable_encoder

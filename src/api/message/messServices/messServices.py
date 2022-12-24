@@ -1,12 +1,12 @@
 
 
-from api.message.entities.chatCreate import AppUser
+from src.api.message.entities.chatCreate import AppUser
 from bson import ObjectId
 import bson
-from api.model.model import modelService
-from core.database.connection import db, chat_collection,mess_collection,payments_collection,createDBChatUser,user_collection
-from api.message.dtos.chat_dto import ChatDto
-from api.message.dtos.chatPayment import chatPayment
+from src.api.model.model import modelService
+from src.core.database.connection import db, chat_collection,mess_collection,payments_collection,createDBChatUser,user_collection
+from src.api.message.dtos.chat_dto import ChatDto
+from src.api.message.dtos.chatPayment import chatPayment
 from datetime import datetime
 from fastapi.responses import JSONResponse
 from fastapi.encoders   import jsonable_encoder

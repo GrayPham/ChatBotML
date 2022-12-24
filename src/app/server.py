@@ -3,10 +3,10 @@ from fastapi import FastAPI, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware import Middleware
 from fastapi.responses import JSONResponse
-from core.extension.dependencies.logging import Logging
+from src.core.extension.dependencies.logging import Logging
 
 
-from api import router
+from src.api import router
 
 
 def init_routers(app: FastAPI) -> None:

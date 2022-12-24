@@ -1,10 +1,10 @@
 from fastapi import APIRouter
 
 
-from api.user.user import user_router
-from api.message.message import mess_router
-from api.botchat.botchat import chat_router
-from api.payment.payment import payment_router
+from src.api.user.user import user_router
+from src.api.message.message import mess_router
+from src.api.botchat.botchat import chat_router
+from src.api.payment.payment import payment_router
 router = APIRouter()
 
 router.include_router(user_router, prefix="/api/user", tags=["User"])

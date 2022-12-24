@@ -2,10 +2,10 @@
 from fastapi import APIRouter, Depends, Query, UploadFile, status
 from typing import List
 from typing import Union
-from api.botchat.chatServices.ChatServices import chatServices
-from api.botchat.dtos.chatbot_dto import ChatBotDto
+from src.api.botchat.chatServices.ChatServices import chatServices
+from src.api.botchat.dtos.chatbot_dto import ChatBotDto
 from fastapi.responses import JSONResponse
-from api.auth.auth_bearer import JWTBearer
+from src.api.auth.auth_bearer import JWTBearer
 from datetime import datetime
 chat_router = APIRouter()
 chat_services = chatServices()

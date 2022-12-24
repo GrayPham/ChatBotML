@@ -2,11 +2,11 @@
 from fastapi import APIRouter, Depends, Query, UploadFile, status
 from typing import List
 from typing import Union
-from api.message.messServices.messServices import messService
-from api.message.dtos.chat_dto import ChatDto
-from api.message.dtos.chatPayment import chatPayment
+from src.api.message.messServices.messServices import messService
+from src.api.message.dtos.chat_dto import ChatDto
+from src.api.message.dtos.chatPayment import chatPayment
 from fastapi.responses import JSONResponse
-from api.auth.auth_bearer import JWTBearer
+from src.api.auth.auth_bearer import JWTBearer
 from datetime import datetime
 mess_router = APIRouter()
 mess_services = messService()
