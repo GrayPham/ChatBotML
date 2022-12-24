@@ -11,7 +11,7 @@ DBNAME = os.environ.get("DBNAME")
 PORT = os.environ.get("PORT")
 
 
-client = MongoClient(MONGODBURL, int(PORT))
+client = MongoClient("mongodb+srv://tnhu:123@chatbot.xseqxjs.mongodb.net/test", int(8000))
 db = client['ChatbotDB']
 user_collection = db.get_collection('User')
 chat_collection = db.get_collection('Botchat')

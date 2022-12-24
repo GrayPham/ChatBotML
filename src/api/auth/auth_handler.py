@@ -5,8 +5,8 @@ from typing import Dict
 import jwt
 from decouple import config
 import os
-JWT_SECRET =os.environ.get("SERECTKEY")
-JWT_ALGORITHM = os.environ.get("JWT_ALGORITHM")
+JWT_SECRET = "secret"
+JWT_ALGORITHM = "HS256"
 
 
 def token_response(token: str):
