@@ -6,7 +6,7 @@ from datetime import datetime
 from fastapi.responses import JSONResponse
 from fastapi.encoders   import jsonable_encoder
 
-class chatServices():
+class ChatServices():
     def chat_helper(self, chat) -> dict:
         return {
             "id": str(chat["_id"]),

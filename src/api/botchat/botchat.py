@@ -2,13 +2,14 @@
 from fastapi import APIRouter, Depends, Query, UploadFile, status
 from typing import List
 from typing import Union
-from src.api.botchat.chatServices.ChatServices import chatServices
+from src.api.botchat.chatServices.ChatServices import ChatServices
+
 from src.api.botchat.dtos.chatbot_dto import ChatBotDto
 from fastapi.responses import JSONResponse
 from src.api.auth.auth_bearer import JWTBearer
 from datetime import datetime
 chat_router = APIRouter()
-chat_services = chatServices()
+chat_services = ChatServices()
 
 @chat_router.get("/allbot") 
 async def getAllBot():
