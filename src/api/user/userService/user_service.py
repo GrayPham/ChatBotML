@@ -5,7 +5,6 @@ from api.payment.dtos.PaymentDto import PaymentDto
 from api.user.dtos.user_dto import UserDto
 from api.user.entities.registerUser import AppUser
 from bson import ObjectId
-import bson
 from core.database.connection import db, user_collection,chat_collection
 from api.user.dtos.register_dto import RegisterDto
 from api.user.dtos.login_dto import LoginrDto

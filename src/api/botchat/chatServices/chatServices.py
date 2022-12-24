@@ -1,6 +1,5 @@
 from api.botchat.entities.chat import AppChat
 from bson import ObjectId
-import bson
 from core.database.connection import db, chat_collection,payments_collection,user_collection
 from api.botchat.dtos.chatbot_dto import ChatBotDto
 from datetime import datetime
