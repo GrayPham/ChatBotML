@@ -2,7 +2,8 @@
 from fastapi import APIRouter, Depends, Query, UploadFile, status
 from typing import List
 from typing import Union
-from src.api.botchat.chatServices.ChatServices import ChatServices
+from src.api.botchat.chatServices.chatServices import ChatServices
+
 
 from src.api.botchat.dtos.chatbot_dto import ChatBotDto
 from fastapi.responses import JSONResponse
